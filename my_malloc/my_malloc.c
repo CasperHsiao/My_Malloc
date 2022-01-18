@@ -35,10 +35,10 @@ header * firstFit(size_t size) {
   while (curr != NULL) {
     if (curr->size >= size && curr->status != 'A') {  // free and fits size
       if (curr->size >= size + MIN_BLOCK_SIZE) {      // need to split box
-        free_space -= size;
+        //free_space -= size;
         return splitBlock(curr, size);
       }
-      free_space -= curr->size;
+      //free_space -= curr->size;
       removeFromFreeList(curr);
       return curr;
     }
@@ -58,15 +58,18 @@ header * bestFit(size_t size) {
       else if (curr->size < best->size) {  // better fit size
         best = curr;
       }
+      if (best->size == size) {
+        break;
+      }
     }
     curr = curr->next;
   }
   if (best != NULL) {
     if (best->size >= size + MIN_BLOCK_SIZE) {  // need to split box
-      free_space -= size;
+      //free_space -= size;
       return splitBlock(best, size);
     }
-    free_space -= best->size;
+    //free_space -= best->size;
     removeFromFreeList(best);
     return best;
   }
@@ -168,7 +171,7 @@ void ff_free(void * ptr) {
   header * block = ptr - HEADER_SIZE;
   addToFreeList(block);
   coalesceAdjacentBlocks(block);
-  free_space += block->size;
+  //free_space += block->size;
 }
 
 void bf_free(void * ptr) {
@@ -187,7 +190,6 @@ unsigned long get_data_segment_free_space_size() {
     freeSpace += curr->size;
     curr = curr->next;
   }
-  printf("Another free space: %lu\n", free_space);
   return freeSpace;
 }
 
